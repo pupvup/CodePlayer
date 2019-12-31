@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<title>CodePlayer</title>
+		<link type="text/css" href="style.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<script type="text/javascript" src="jquery-ui-1.12.1/jquery-ui.min.js"></script>
+	</head>
+
+	<body>
+		<div id="header">
+			<div id="logo">CodePlayer</div>
+			<div id="btn-container">
+				<div class="toggle-btn active" id="html">HTML</div>
+				<div class="toggle-btn" id="css">CSS</div>
+				<div class="toggle-btn" id="js">JavaScript</div>
+				<div class="toggle-btn active" id="out">Output</div>
+			</div>
+		</div>
+		<div id="body-container">
+			<textarea id="html-panel" class="panel"><h1 id="h">lorem ipsum</h1></textarea>
+				<textarea id="css-panel" class="panel hidden">h1 {color: #380438}</textarea>
+				<textarea id="js-panel" class="panel hidden">document.getElementById("h").innerHTML = "dolor sit amet"</textarea>
+				<iframe id="out-panel" class="panel"></iframe>
+			</div>
+		<script type="text/javascript">
+			function updateOutput() {
+				$("iframe").contents().find("html").html("<html><heade><style type=\"text/css\">" + $("#css-panel").val() + "</style></head><body>" + $("#html-panel").val() + "</body></html>");
+				
+				document.getElementById("out-panel").contentWindow.eval($("#js-panel").val());
+			}
+			
+			$(".toggle-btn").hover(function() {
+				$(this).addClass("highlight-btn");
+			}, function() {
+				$(this).removeClass("highlight-btn");
+			});
+			
+			$(".toggle-btn").click(function() {
+				$(this).toggleClass("active");
+				$(this).removeClass("highlight-btn");
+				var panelId = $(this).attr("id") + "-panel";
+				$("#" + panelId).toggleClass("hidden");
+				var activePanels = 4 - $(".hidden").length;
+				$(".panel").width($(window).width() / activePanels  - 10);
+			});
+			
+			$(".panel").height($(window).height() - $("#header").height() - 15);
+			$(".panel").width($(window).width() / 2 - 10);
+			
+			updateOutput();
+			$("textarea").on('change keyup paste', function() {
+				updateOutput();
+			});
+			
+		</script>
+	</body>
+
+</html>
